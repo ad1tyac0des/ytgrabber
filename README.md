@@ -22,30 +22,32 @@
 ## Installation
 
 1. Clone the repository
-bash
-git clone https://github.com/yourusername/ytgrabber.git
+```bash
+git clone https://github.com/ad1tyac0des/ytgrabber
 cd ytgrabber
-
+```
 
 2. Install dependencies and run the app using the automated script:
 
 *Windows PowerShell*:
-powershell
+```powershell
 .\run.ps1
+```
 
 
 *Linux/MacOS*:
-bash
+```bash
 chmod +x run.sh
 ./run.sh
+```
 
 
 3. Or install manually:
 
-powershell
+```powershell
 pip install -r requirements.txt
 python app.py
-
+```
 
 ## Usage
 
