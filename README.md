@@ -31,6 +31,8 @@ cd ytgrabber
 
 *Windows PowerShell*:
 ```powershell
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser
+
 .\run.ps1
 ```
 
@@ -38,6 +40,7 @@ cd ytgrabber
 *Linux/MacOS*:
 ```bash
 chmod +x run.sh
+
 ./run.sh
 ```
 
