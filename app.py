@@ -3,6 +3,7 @@ import yt_dlp
 import inquirer
 
 class YouTubeDownloader:
+    # Initialize the downloader and create downloads directory
     def __init__(self):
         self.video_info = None
         self.download_path = os.path.join(os.getcwd(), 'downloads')
@@ -10,6 +11,7 @@ class YouTubeDownloader:
         if not os.path.exists(self.download_path):
             os.makedirs(self.download_path)
 
+    # Prompt user for video URL and validate input
     def get_video_url(self):
         while True:
             url = input("Enter Video URL: ").strip()
@@ -17,6 +19,7 @@ class YouTubeDownloader:
                 return url
             print("URL cannot be empty. Please try again.")
 
+    # Extract video information and available formats using yt-dlp
     def fetch_video_info(self, url):
         try:
             ydl_opts = {
@@ -65,6 +68,7 @@ class YouTubeDownloader:
             traceback.print_exc()
             return None
 
+    # Convert bytes to human-readable file size (B, KB, MB, GB, TB)
     def format_filesize(self, size):
         try:
             size = float(size)
@@ -78,6 +82,7 @@ class YouTubeDownloader:
         except (TypeError, ValueError):
             return "Unknown"
 
+    # Let user choose between Best Quality or Manual Selection mode
     def select_download_mode(self):
         questions = [
             inquirer.List('mode',
@@ -87,6 +92,7 @@ class YouTubeDownloader:
         ]
         return inquirer.prompt(questions)['mode']
 
+    # Find the highest quality format based on resolution and file size
     def get_best_format(self, formats):
         sorted_formats = sorted(
             formats,
@@ -98,14 +104,25 @@ class YouTubeDownloader:
         )
         return sorted_formats[0] if sorted_formats else None
 
+    # Display available formats and let user select one
     def select_download_format(self, formats):
         if not formats:
             print("No downloadable formats found!")
             return None
 
+        # Sort formats by resolution (highest to lowest) and filesize
+        sorted_formats = sorted(
+            formats,
+            key=lambda x: (
+                int(x['resolution'].replace('p', '')),
+                float(x['filesize'].split()[0]) if x['filesize'] != 'Unknown' else 0
+            ),
+            reverse=True
+        )
+        
         format_choices = [
             f"[{f['resolution']}] {f['ext']} - {f['filesize']} (FPS: {f['fps']})" 
-            for f in formats
+            for f in sorted_formats
         ]
         
         questions = [
@@ -118,8 +135,9 @@ class YouTubeDownloader:
         answers = inquirer.prompt(questions)
         
         selected_index = format_choices.index(answers['format'])
-        return formats[selected_index]
+        return sorted_formats[selected_index]  # Return from sorted formats
 
+    # Let user choose between video or audio-only download
     def select_download_type(self):
         questions = [
             inquirer.List('type',
@@ -131,6 +149,7 @@ class YouTubeDownloader:
         answers = inquirer.prompt(questions)
         return answers['type']
 
+    # Let user select MP3 audio quality (bitrate)
     def select_audio_quality(self):
         questions = [
             inquirer.List('quality',
@@ -147,6 +166,7 @@ class YouTubeDownloader:
         answer = inquirer.prompt(questions)['quality']
         return answer.split('(')[1].split('k')[0].strip()  # Extract kbps value
 
+    # Download the video/audio with selected format and options
     def download_video(self, url, selected_format, download_type, audio_quality=None):
         try:
             # Create filename template with quality info
@@ -182,6 +202,7 @@ class YouTubeDownloader:
             import traceback
             traceback.print_exc()
 
+    # Main execution flow coordinating all download steps
     def run(self):
         try:
             url = self.get_video_url()
@@ -225,6 +246,7 @@ class YouTubeDownloader:
             import traceback
             traceback.print_exc()
 
+# Entry point of the script
 def main():
     print(f"+{'-'*36} YouTube Video Downloader {'-'*36}+\n")
     downloader = YouTubeDownloader()
