@@ -7,9 +7,27 @@ class YouTubeDownloader:
     def __init__(self):
         self.video_info = None
         self.download_path = os.path.join(os.getcwd(), 'downloads')
+        print(f"\nDefault download folder: {self.download_path}")
         
+        # Ask for custom download path
+        custom_path = input("\nEnter custom download path (press Enter to use default): ").strip()
+        if custom_path:
+            if os.path.isabs(custom_path):
+                self.download_path = custom_path
+            else:
+                self.download_path = os.path.abspath(custom_path)
+            print(f"Download folder set to: {self.download_path}")
+        
+        # Create download directory if it doesn't exist
         if not os.path.exists(self.download_path):
-            os.makedirs(self.download_path)
+            try:
+                os.makedirs(self.download_path)
+                print(f"Created download directory: {self.download_path}")
+            except Exception as e:
+                print(f"Error creating directory: {e}")
+                print("Falling back to default download path...")
+                self.download_path = os.path.join(os.getcwd(), 'downloads')
+                os.makedirs(self.download_path, exist_ok=True)
 
     # Prompt user for video URL and validate input
     def get_video_url(self):
