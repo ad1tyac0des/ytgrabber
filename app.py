@@ -32,30 +32,38 @@ class YouTubeDownloader:
                 
                 title = info_dict.get('title', 'Unknown Title')
                 formats = []
+                resolution_formats = {}  # Dictionary to store best format for each resolution
                 
                 for f in info_dict.get('formats', []):
                     try:
                         height = f.get('height')
                         width = f.get('width')
+                        filesize = f.get('filesize', 0) or 0
                         
-                        if not height or not width:
+                        if not height or not width or filesize == 0:
                             continue
                         
                         resolution = f'{height}p'
                         file_ext = f.get('ext', 'Unknown')
                         fps = f.get('fps', 'Unknown')
-                        filesize = f.get('filesize', 0) or 0
                         
-                        formats.append({
-                            'format_id': f.get('format_id'),
-                            'resolution': resolution,
-                            'ext': file_ext,
-                            'fps': fps,
-                            'filesize': self.format_filesize(filesize)
-                        })
+                        # Keep only the format with largest filesize for each resolution
+                        if resolution not in resolution_formats or filesize > resolution_formats[resolution]['filesize_raw']:
+                            resolution_formats[resolution] = {
+                                'format_id': f.get('format_id'),
+                                'resolution': resolution,
+                                'ext': file_ext,
+                                'fps': fps,
+                                'filesize': self.format_filesize(filesize),
+                                'filesize_raw': filesize  # Store raw filesize for comparison
+                            }
                     
                     except Exception as format_error:
                         print(f"Skipping problematic format: {format_error}")
+                
+                # Convert dictionary values to list, excluding the raw filesize
+                formats = [{k: v for k, v in fmt.items() if k != 'filesize_raw'} 
+                          for fmt in resolution_formats.values()]
                 
                 return {
                     'title': title,
