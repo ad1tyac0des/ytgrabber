@@ -131,7 +131,23 @@ class YouTubeDownloader:
         answers = inquirer.prompt(questions)
         return answers['type']
 
-    def download_video(self, url, selected_format, download_type):
+    def select_audio_quality(self):
+        questions = [
+            inquirer.List('quality',
+                          message="Select Audio Quality",
+                          choices=[
+                              'Best Quality (320 kbps)',
+                              'Very High Quality (256 kbps)',
+                              'High Quality (192 kbps)',
+                              'Standard Quality (128 kbps)',
+                              'Low Quality (64 kbps)'
+                          ],
+            ),
+        ]
+        answer = inquirer.prompt(questions)['quality']
+        return answer.split('(')[1].split('k')[0].strip()  # Extract kbps value
+
+    def download_video(self, url, selected_format, download_type, audio_quality=None):
         try:
             if download_type == 'Audio (MP3)':
                 ydl_opts = {
@@ -139,15 +155,15 @@ class YouTubeDownloader:
                     'postprocessors': [{
                         'key': 'FFmpegExtractAudio',
                         'preferredcodec': 'mp3',
-                        'preferredquality': '192',
+                        'preferredquality': audio_quality,
                     }],
                     'outtmpl': os.path.join(self.download_path, '%(title)s.%(ext)s'),
                 }
             else:
                 ydl_opts = {
-                'format': f'{selected_format["format_id"]}+bestaudio/best',
-                'outtmpl': os.path.join(self.download_path, '%(title)s.%(ext)s'),
-            }
+                    'format': f'{selected_format["format_id"]}+bestaudio/best',
+                    'outtmpl': os.path.join(self.download_path, '%(title)s.%(ext)s'),
+                }
 
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([url])
@@ -172,6 +188,14 @@ class YouTubeDownloader:
 
             print(f"\n Video: {video_info['title']}")
 
+            download_type = self.select_download_type()
+            
+            if download_type == 'Audio (MP3)':
+                audio_quality = self.select_audio_quality()
+                print(f"\n⬇️ Downloading audio in {audio_quality}kbps quality...")
+                self.download_video(url, None, download_type, audio_quality)
+                return
+
             download_mode = self.select_download_mode()
             
             if download_mode == 'Best Quality':
@@ -184,9 +208,7 @@ class YouTubeDownloader:
                 print("No format selected. Exiting.")
                 return
 
-            download_type = self.select_download_type()
-
-            print("\n⬇️ Downloading...")
+            print("\n⬇️ Downloading video...")
             self.download_video(url, selected_format, download_type)
 
         except KeyboardInterrupt:
