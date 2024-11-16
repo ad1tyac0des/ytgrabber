@@ -149,7 +149,9 @@ class YouTubeDownloader:
 
     def download_video(self, url, selected_format, download_type, audio_quality=None):
         try:
+            # Create filename template with quality info
             if download_type == 'Audio (MP3)':
+                filename_template = f'%(title)s - [mp3-{audio_quality}kbps].%(ext)s'
                 ydl_opts = {
                     'format': 'bestaudio/best',
                     'postprocessors': [{
@@ -157,12 +159,17 @@ class YouTubeDownloader:
                         'preferredcodec': 'mp3',
                         'preferredquality': audio_quality,
                     }],
-                    'outtmpl': os.path.join(self.download_path, '%(title)s.%(ext)s'),
+                    'outtmpl': os.path.join(self.download_path, filename_template),
                 }
             else:
+                resolution = selected_format["resolution"]
+                ext = selected_format["ext"]
+                fps = selected_format["fps"]
+                filename_template = f'%(title)s - [{resolution}-{fps}fps].%(ext)s'
                 ydl_opts = {
                     'format': f'{selected_format["format_id"]}+bestaudio/best',
-                    'outtmpl': os.path.join(self.download_path, '%(title)s.%(ext)s'),
+                    'outtmpl': os.path.join(self.download_path, filename_template),
+                    'merge_output_format': 'mp4'
                 }
 
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
