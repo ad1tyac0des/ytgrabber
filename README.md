@@ -1,6 +1,6 @@
 # YTGrabber
 
-🎥 YTGrabber is a lightweight command-line tool that lets you download YouTube videos and audio with ease. Built with Python, it provides an interactive interface for selecting your preferred quality and format.
+🎥 YTGrabber is a lightweight command-line tool that lets you download YouTube videos, video clips, audio and audio clips. Built with yt-dlp, it provides an interactive interface for selecting your preferred media type, quality and format.
 
 <div align="center">
 
@@ -11,13 +11,23 @@
 
 ## Features
 
-- Download videos in available quality formats (up to 4K)
-- Extract audio in MP3 format 
-- Interactive format selection:
-  - Quick "Best Quality" option
-  - Manual format selection with resolution, FPS and file size details
+- Download videos/clips in available quality formats (up to 4K)
+- Download audio in MP3 format 
+- Download video clips
+- Download audio clips
+- Interactive format selection
 - Simple command-line interface
-- Downloads saved in organized local folder
+- Customizable download path
+
+## Requirements
+
+- FFmpeg
+  - Windows users: FFmpeg requires manual installation. You can either:
+    - Download the pre-configured version [here](https://drive.google.com/file/d/1dUmR4yQwsSH_h2bSUYTa9NOjui8g3zgQ/view?usp=drive_link)
+    - Or download from the [official site](https://ffmpeg.org/download.html)
+  - After downloading, add FFmpeg to your system's PATH environment variable
+
+  - Linux/MacOS users: The `run.sh` script will automatically install FFmpeg if it's not installed or not found in PATH
 
 ## Installation
 
@@ -52,15 +62,25 @@ pip install -r requirements.txt
 python app.py
 ```
 
-## Usage
+## General Usage
 
-1. Run the application: python app.py
-2. Enter the YouTube video URL when prompted
-3. Choose between "Best Quality" or "Manual Selection"
-4. Select your preferred format and type (video/audio)
+1. Run the application:
+  - Windows: `.\run.ps1`
+  - Linux/MacOS: `./run.sh`
+
+2. Enter the desired download path or press Enter to use the default
+3. Enter the YouTube video URL
+4. Select the download type (video/audio/video clip/audio clip)
+5. Select the desired format and quality
+6. Wait for download to complete
+
+## Downloading Audio/Video Clips
+
+1. Enter the YouTube video URL
+2. Select the download type (video clip/audio clip)
+3. Enter the start and end times for the clip in `HH:MM:SS` OR `MM:SS` OR `SS` format (e.g. `1:30` for 1 minute and 30 seconds, `45` for 45 seconds, `2:01:40` for 2 hours, 1 minute and 40 seconds, etc.)
+4. Select the desired quality
 5. Wait for download to complete
-
-Files are saved in the downloads folder within the project directory.
 
 ## Contributing
 
