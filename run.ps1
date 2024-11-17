@@ -6,6 +6,16 @@
 # Dont worry about the command, it wont affect your system or privacy.
 # Then run the script with: .\run.ps1
 
+if (-not (Get-Command ffmpeg -ErrorAction SilentlyContinue)) {
+    Write-Host ("-" * 100)
+    Write-Host "FFmpeg is not installed or not found in PATH"
+    Write-Host "FFmpeg is required to run ytgrabber"
+    Write-Host "Please download and install FFmpeg, then add it to your system PATH"
+    Write-Host "Download FFmpeg from: https://drive.google.com/file/d/1dUmR4yQwsSH_h2bSUYTa9NOjui8g3zgQ/view?usp=drive_link"
+    Write-Host ("-" * 100)
+    exit 1
+}
+
 Write-Host ("-" * 100)
 Write-Host "Installing Necessary Packages..."
 Write-Host ("-" * 100)
