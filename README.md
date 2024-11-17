@@ -13,8 +13,7 @@
 
 - Download videos/clips in available quality formats (up to 4K)
 - Download audio in MP3 format 
-- Download video clips
-- Download audio clips
+- ✨ NEW: Smart clipping - Download only what you watch, saving bandwidth and storage
 - Interactive format selection
 - Simple command-line interface
 - Customizable download path
