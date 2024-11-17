@@ -14,6 +14,11 @@ if ! command -v python3 -m venv &> /dev/null; then
     sudo apt-get update && sudo apt-get install -y python3-venv
 fi
 
+if ! command -v ffmpeg &> /dev/null; then
+    echo "Installing FFmpeg..."
+    sudo apt-get update && sudo apt-get install -y ffmpeg
+fi
+
 if [ ! -d "venv" ]; then
     python3 -m venv venv
 fi
