@@ -1,6 +1,7 @@
 import os
 import yt_dlp
 import inquirer
+import re
 
 class YouTubeDownloader:
     # Initialize the downloader and create downloads directory
@@ -168,7 +169,7 @@ class YouTubeDownloader:
         questions = [
             inquirer.List('type',
                           message="Select Download Type",
-                          choices=['Video', 'Audio (MP3)'],
+                          choices=['Video', 'Video Clip', 'Audio (MP3)', 'Audio Clip (MP3)'],
             ),
         ]
         
@@ -192,12 +193,64 @@ class YouTubeDownloader:
         answer = inquirer.prompt(questions)['quality']
         return answer.split('(')[1].split('k')[0].strip()  # Extract kbps value
 
-    # Download the video/audio with selected format and options
-    def download_video(self, url, selected_format, download_type, audio_quality=None):
+    def parse_timestamp(self, time_str):
+        """Convert various time formats to seconds"""
         try:
-            # Create filename template with quality info
-            if download_type == 'Audio (MP3)':
-                filename_template = f'%(title)s - [mp3-{audio_quality}kbps].%(ext)s'
+            # Remove any whitespace
+            time_str = time_str.strip()
+            
+            # Try HH:MM:SS format
+            if re.match(r'^\d{1,2}:\d{1,2}:\d{1,2}$', time_str):
+                h, m, s = map(int, time_str.split(':'))
+                return h * 3600 + m * 60 + s
+            
+            # Try MM:SS format
+            elif re.match(r'^\d{1,2}:\d{1,2}$', time_str):
+                m, s = map(int, time_str.split(':'))
+                return m * 60 + s
+            
+            # Try SS format
+            elif re.match(r'^\d+$', time_str):
+                return int(time_str)
+            
+            raise ValueError("Invalid time format")
+        except Exception:
+            return None
+
+    def get_clip_timestamps(self):
+        """Get and validate start and end times for the clip"""
+        while True:
+            start_time = input("\nEnter clip start time (HH:MM:SS, MM:SS, or SS): ").strip()
+            start_seconds = self.parse_timestamp(start_time)
+            
+            if start_seconds is None:
+                print("Invalid start time format. Please try again.")
+                continue
+                
+            end_time = input("Enter clip end time (HH:MM:SS, MM:SS, or SS): ").strip()
+            end_seconds = self.parse_timestamp(end_time)
+            
+            if end_seconds is None:
+                print("Invalid end time format. Please try again.")
+                continue
+                
+            if end_seconds <= start_seconds:
+                print("End time must be greater than start time. Please try again.")
+                continue
+                
+            return start_seconds, end_seconds
+
+    # Download the video/audio with selected format and options
+    def download_video(self, url, selected_format, download_type, audio_quality=None, clip_times=None):
+        try:
+            # Handle both Audio (MP3) and Audio Clip (MP3)
+            if download_type in ['Audio (MP3)', 'Audio Clip (MP3)']:
+                if clip_times and download_type == 'Audio Clip (MP3)':
+                    start_time, end_time = clip_times
+                    filename_template = f'%(title)s - [mp3-{audio_quality}kbps] [{start_time}-{end_time}sec].%(ext)s'
+                else:
+                    filename_template = f'%(title)s - [mp3-{audio_quality}kbps].%(ext)s'
+
                 ydl_opts = {
                     'format': 'bestaudio/best',
                     'postprocessors': [{
@@ -207,16 +260,44 @@ class YouTubeDownloader:
                     }],
                     'outtmpl': os.path.join(self.download_path, filename_template),
                 }
+
+                # Add clip options if it's an audio clip
+                if clip_times and download_type == 'Audio Clip (MP3)':
+                    start_time, end_time = clip_times
+                    ydl_opts.update({
+                        'download_ranges': lambda info_dict, ydl: [{
+                            'start_time': start_time,
+                            'end_time': end_time
+                        }],
+                        'force_keyframes_at_cuts': True,
+                    })
             else:
+                # Existing video download code remains the same
                 resolution = selected_format["resolution"]
                 ext = selected_format["ext"]
                 fps = selected_format["fps"]
-                filename_template = f'%(title)s - [{resolution}-{fps}fps].%(ext)s'
+                
+                if clip_times:
+                    start_time, end_time = clip_times
+                    filename_template = f'%(title)s - [{resolution}-{fps}fps] [{start_time}-{end_time}sec].%(ext)s'
+                else:
+                    filename_template = f'%(title)s - [{resolution}-{fps}fps].%(ext)s'
+
                 ydl_opts = {
                     'format': f'{selected_format["format_id"]}+bestaudio/best',
                     'outtmpl': os.path.join(self.download_path, filename_template),
                     'merge_output_format': 'mp4'
                 }
+
+                if clip_times:
+                    start_time, end_time = clip_times
+                    ydl_opts.update({
+                        'download_ranges': lambda info_dict, ydl: [{
+                            'start_time': start_time,
+                            'end_time': end_time
+                        }],
+                        'force_keyframes_at_cuts': True,
+                    })
 
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([url])
@@ -244,11 +325,21 @@ class YouTubeDownloader:
 
             download_type = self.select_download_type()
             
-            if download_type == 'Audio (MP3)':
+            # Handle both Audio (MP3) and Audio Clip (MP3)
+            if download_type in ['Audio (MP3)', 'Audio Clip (MP3)']:
                 audio_quality = self.select_audio_quality()
+                clip_times = None
+                if download_type == 'Audio Clip (MP3)':
+                    clip_times = self.get_clip_timestamps()
                 print(f"\n⬇️ Downloading audio in {audio_quality}kbps quality...")
-                self.download_video(url, None, download_type, audio_quality)
+                self.download_video(url, None, download_type, audio_quality, clip_times)
                 return
+
+            # Handle clip download
+            clip_times = None
+            if download_type == 'Video Clip':
+                clip_times = self.get_clip_timestamps()
+                download_type = 'Video'  # Reset to video type for processing
 
             download_mode = self.select_download_mode()
             
@@ -263,7 +354,7 @@ class YouTubeDownloader:
                 return
 
             print("\n⬇️ Downloading video...")
-            self.download_video(url, selected_format, download_type)
+            self.download_video(url, selected_format, download_type, clip_times=clip_times)
 
         except KeyboardInterrupt:
             print("\n\n Download cancelled by user.")
