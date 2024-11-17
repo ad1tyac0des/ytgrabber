@@ -1,15 +1,17 @@
-# YTGrabber
-
-🎥 YTGrabber is a lightweight command-line tool that lets you download YouTube videos, video clips, audio and audio clips. Built with yt-dlp, it provides an interactive interface for selecting your preferred media type, quality and format.
-
 <div align="center">
 
-[![Python](https://img.shields.io/badge/Python-3.6+-blue.svg)](https://www.python.org/downloads/)
-[![LICENSE](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+![YTGrabber](./docs/logo.png)
+
+<hr>
+
+🎥 Lightweight command-line tool that download YouTube videos, audios and audio/video clips supporting almost every platform.
+
+![Python](https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue)
+![License](https://img.shields.io/badge/license-Apache%202.0-orange.svg?style=for-the-badge)
 
 </div>
 
-## Features
+## 🔥 Features
 
 - Download videos/clips in available quality formats (up to 4K)
 - Download audio in MP3 format 
@@ -18,7 +20,7 @@
 - Simple command-line interface
 - Customizable download path
 
-## Requirements
+## 🛠️ Requirements
 
 - FFmpeg
   - Windows users: FFmpeg requires manual installation. You can either:
@@ -28,7 +30,7 @@
 
   - Linux/MacOS users: The `run.sh` script will automatically install FFmpeg if it's not installed or not found in PATH
 
-## Installation
+## 📥 Installation
 
 1. Clone the repository
 ```bash
@@ -53,15 +55,7 @@ chmod +x run.sh
 ./run.sh
 ```
 
-
-3. Or install manually:
-
-```powershell
-pip install -r requirements.txt
-python app.py
-```
-
-## General Usage
+## 🚀 General Usage
 
 1. Run the application:
   - Windows: `.\run.ps1`
@@ -73,7 +67,7 @@ python app.py
 5. Select the desired format and quality
 6. Wait for download to complete
 
-## Downloading Audio/Video Clips
+## 🎬 Downloading Audio/Video Clips
 
 1. Enter the YouTube video URL
 2. Select the download type (video clip/audio clip)
@@ -81,7 +75,17 @@ python app.py
 4. Select the desired quality
 5. Wait for download to complete
 
-## Contributing
+## 📸 Screenshots
+
+<div align="center">
+
+![Screenshot 1](./docs/screenshots/screenshot1.png)
+
+![Screenshot 2](./docs/screenshots/screenshot2.png)
+
+</div>
+
+## 🤝 Contributing
 
 Contributions are welcome! Feel free to:
 
@@ -89,6 +93,8 @@ Contributions are welcome! Feel free to:
 - Suggest new features
 - Submit pull requests
 
-## License
+## 📄 License 
+![License](https://img.shields.io/badge/license-Apache%202.0-orange.svg?style=for-the-badge)
+<br>
 
 This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
