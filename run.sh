@@ -16,7 +16,9 @@ fi
 
 if ! command -v ffmpeg &> /dev/null; then
     echo "Installing FFmpeg..."
-    sudo apt-get update && sudo apt-get install -y ffmpeg
+    if ! sudo apt-get install -y ffmpeg; then
+        sudo apt-get update --ignore-missing && sudo apt-get install -y ffmpeg
+    fi
 fi
 
 if [ ! -d "venv" ]; then
