@@ -2,7 +2,7 @@
 
 ![YTGrabber](./docs/logo.png)
 
-<hr>
+<br>
 
 🎥 Lightweight command-line tool that download YouTube videos, audios and audio/video clips supporting almost every platform.
 
@@ -55,6 +55,10 @@ chmod +x run.sh
 
 ./run.sh
 ```
+
+#### *Android* 🤖:
+
+For Android Installtion instructions, check out our [Android Installation Guide](./docs/android-installation.md) 📲
 
 ## 🚀 General Usage
 
