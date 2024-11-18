@@ -33,9 +33,6 @@
 ## 🚀 Installing and Running the YTGrabber
 #### 1. Clone the repository
    ```bash
-   cd storage/shared/ # or wherever you want to store the application
-   ```
-   ```bash
    git clone https://github.com/ad1tyac0des/ytgrabber
    ```
    ```bash
