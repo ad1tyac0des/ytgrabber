@@ -39,14 +39,14 @@
    cd ytgrabber
    ```
 
-#### 2. Make run.sh executable
+#### 2. Make run-termux.sh executable
    ```bash
-   chmod +x run.sh
+   chmod +x run-termux.sh
    ```
 
 #### 3. Run the application
    ```bash
-   ./run.sh
+   ./run-termux.sh
    ```
 
 <br>
@@ -65,5 +65,5 @@
 - If FFmpeg fails to install, try: `pkg install ffmpeg -y` separately
 
 ## 📝 Notes
-- The run script will automatically install all required dependencies
+- The `run-termux.sh` script will automatically install all required dependencies
 - First run might take longer as it sets up the virtual environment and installs packages
