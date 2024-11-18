@@ -6,8 +6,9 @@
 
 🎥 Lightweight command-line tool that download YouTube videos, audios and audio/video clips supporting almost every platform.
 
-![Python](https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue)
-![License](https://img.shields.io/badge/license-Apache%202.0-orange.svg?style=for-the-badge)
+[![Python](https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue)](https://www.python.org/)
+[![FFmpeg](https://shields.io/badge/FFmpeg-%23171717.svg?logo=ffmpeg&style=for-the-badge&labelColor=171717&logoColor=5cb85c)](https://ffmpeg.org/)
+[![License](https://img.shields.io/badge/license-Apache%202.0-orange.svg?style=for-the-badge)](LICENSE)
 
 </div>
 
@@ -32,15 +33,15 @@
 
 ## 📥 Installation
 
-1. Clone the repository
+#### 1. Clone the repository
 ```bash
 git clone https://github.com/ad1tyac0des/ytgrabber
 cd ytgrabber
 ```
 
-2. Install dependencies and run the app using the automated script:
+#### 2. Install dependencies and run the app using the automated script:
 
-*Windows PowerShell*:
+##### *Windows PowerShell*:
 ```powershell
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser
 
@@ -48,7 +49,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser
 ```
 
 
-*Linux/MacOS*:
+##### *Linux/MacOS*:
 ```bash
 chmod +x run.sh
 
@@ -94,7 +95,7 @@ Contributions are welcome! Feel free to:
 - Submit pull requests
 
 ## 📄 License 
-![License](https://img.shields.io/badge/license-Apache%202.0-orange.svg?style=for-the-badge)
+[![License](https://img.shields.io/badge/license-Apache%202.0-orange.svg?style=for-the-badge)](LICENSE)
 <br>
 
 This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
