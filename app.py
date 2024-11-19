@@ -2,6 +2,8 @@ import os
 import yt_dlp
 import inquirer
 import re
+from random import choice
+from cfonts import render
 
 class YouTubeDownloader:
     # Initialize the downloader and create downloads directory
@@ -363,9 +365,21 @@ class YouTubeDownloader:
             import traceback
             traceback.print_exc()
 
-# Entry point of the script
+def print_title():
+    colors = [['red', 'white'], ['white', 'gray'], ['green', 'white']]
+    output = render(
+        'ytgrabber',
+        font='block',
+        align='center',
+        colors= choice(colors),
+        background='transparent',
+        space=True
+    )
+    print(output)
+
+
 def main():
-    print(f"+{'-'*36} YouTube Video Downloader {'-'*36}+\n")
+    print_title()
     downloader = YouTubeDownloader()
     downloader.run()
 
