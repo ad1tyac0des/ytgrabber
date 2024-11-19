@@ -6,10 +6,13 @@ from random import choice
 from cfonts import render
 
 class YouTubeDownloader:
-    # Initialize the downloader and create downloads directory
+    # Default download path
+    DEFAULT_DOWNLOAD_PATH = os.path.join(os.getcwd(), 'downloads')
+    
+    # Initialize the downloader and set default downloads directory
     def __init__(self):
         self.video_info = None
-        self.download_path = os.path.join(os.getcwd(), 'downloads')
+        self.download_path = self.DEFAULT_DOWNLOAD_PATH
         print(f"\nDefault download folder: {self.download_path}")
         
         # Ask for custom download path
@@ -29,7 +32,7 @@ class YouTubeDownloader:
             except Exception as e:
                 print(f"Error creating directory: {e}")
                 print("Falling back to default download path...")
-                self.download_path = os.path.join(os.getcwd(), 'downloads')
+                self.download_path = self.DEFAULT_DOWNLOAD_PATH
                 os.makedirs(self.download_path, exist_ok=True)
 
     # Prompt user for video URL and validate input
@@ -304,7 +307,7 @@ class YouTubeDownloader:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([url])
             
-            print(f"\n✅ Download complete! File saved in {self.download_path}")
+            print(f"\n✅ Download complete! File saved in {self.download_path} \n")
         
         except Exception as e:
             print(f"❌ Download failed: {e}")
@@ -355,7 +358,7 @@ class YouTubeDownloader:
                 print("No format selected. Exiting.")
                 return
 
-            print("\n⬇️ Downloading video...")
+            print("\n⬇️  Downloading video...")
             self.download_video(url, selected_format, download_type, clip_times=clip_times)
 
         except KeyboardInterrupt:
@@ -381,7 +384,23 @@ def print_title():
 def main():
     print_title()
     downloader = YouTubeDownloader()
-    downloader.run()
+    
+    while True:
+        downloader.run()
+        
+        questions = [
+            inquirer.List('continue',
+                         message="Continue?",
+                         choices=['Yes', 'No (Exit)'],
+            ),
+        ]
+        
+        answer = inquirer.prompt(questions)['continue']
+        if answer == 'No (Exit)':
+            print("\nYtGrabber has completed its mission. Time to recharge!")
+            break
+        
+        print("\n" + "="*50 + "\n")
 
 if __name__ == "__main__":
     main()
