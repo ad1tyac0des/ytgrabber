@@ -4,7 +4,7 @@
 
 <br>
 
-🎥 Lightweight command-line tool that download YouTube videos, audios and audio/video clips supporting almost every platform.
+🎥 Lightweight command-line tool that download YouTube videos, audios and audio/video clips, supporting almost every platform.
 
 [![Python](https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue)](https://www.python.org/)
 [![FFmpeg](https://shields.io/badge/FFmpeg-%23171717.svg?logo=ffmpeg&style=for-the-badge&labelColor=171717&logoColor=5cb85c)](https://ffmpeg.org/)
@@ -23,16 +23,18 @@
 - Interactive format selection
 - Simple command-line interface
 - Customizable download path
+- Straightforward Installation
+- Cross-platform compatibility (Windows, Linux, macOS, Android)
 
 ## 🛠️ Requirements
 
 - FFmpeg
-  - Windows users: FFmpeg requires manual installation. You can either:
-    - Download the pre-configured version [here](https://drive.google.com/file/d/1dUmR4yQwsSH_h2bSUYTa9NOjui8g3zgQ/view?usp=drive_link)
+  - Windows: FFmpeg requires manual installation. You can either:
+    - Download the pre-configured Build [here](https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip)
     - Or download from the [official site](https://ffmpeg.org/download.html)
   - After downloading, add FFmpeg to your system's PATH environment variable
 
-  - Linux/MacOS users: The `run.sh` script will automatically install FFmpeg if it's not installed or not found in PATH
+  - Linux/MacOS: The `install_command.py` script will automatically install FFmpeg if it's not installed or not found in PATH
 
 ## 📥 Installation
 
@@ -42,33 +44,38 @@ git clone https://github.com/ad1tyac0des/ytgrabber
 cd ytgrabber
 ```
 
-#### 2. Install dependencies and run the app using the automated script:
+#### 2. Setup YTGrabber Command (Run Once):
 
 ##### *Windows PowerShell*:
 ```powershell
-Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser
-
-.\run.ps1
+python install_command.py
 ```
 
+<div style="background-color: hsla(120, 100%, 90%, 0.05);padding: 10px; border-radius: 6px; border: 1px solid #84c697; margin: 10px 0;">
+
+💡 **Note for Windows Users:**
+- The script will request admin access once
+- It only adds YTGrabber commands to your system PATH
+- No other modifications are made to your system
+- Your privacy and security are our top priority
+- Being open-source, all code changes are transparent and verifiable
+
+</div>
 
 ##### *Linux/MacOS*:
 ```bash
-chmod +x run.sh
-
-./run.sh
+python3 install_command.py
 ```
 
-#### *Android* 🤖:
+#### 3. Now, Run the application using `ytgrabber` or `ytgrab` command in your terminal
+
+### *Android* 🤖:
 
 For Android Installtion instructions, check out our [Android Installation Guide](./docs/android-installation.md) 📲
 
 ## 🚀 General Usage
 
-1. Run the application:
-  - Windows: `.\run.ps1`
-  - Linux/MacOS: `./run.sh`
-
+1. Run the application using `ytgrabber` or `ytgrab` command in terminal
 2. Enter the desired download path or press Enter to use the default
 3. Enter the YouTube video URL
 4. Select the download type (video/audio/video clip/audio clip)

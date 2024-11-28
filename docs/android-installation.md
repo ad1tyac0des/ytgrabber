@@ -39,22 +39,20 @@
    cd ytgrabber
    ```
 
-#### 2. Make run-termux.sh executable
+#### 2. Make quickstart-termux.sh executable
    ```bash
-   chmod +x run-termux.sh
+   chmod +x quickstart-termux.sh
    ```
 
 #### 3. Run the application
    ```bash
-   ./run-termux.sh
+   ./quickstart-termux.sh
    ```
 
 <br>
 
 <div align="center">
 <img src="https://i.pinimg.com/originals/38/20/04/38200478b91db2d19a12ecf4672391c9.gif" width="500" height="300">
-
-### Happy Grabbing! 🎉
 
 </div>
 
@@ -65,5 +63,5 @@
 - If FFmpeg fails to install, try: `pkg install ffmpeg -y` separately
 
 ## 📝 Notes
-- The `run-termux.sh` script will automatically install all required dependencies
+- The `quickstart-termux.sh` script will automatically install all required dependencies
 - First run might take longer as it sets up the virtual environment and installs packages
