@@ -40,7 +40,7 @@ def create_windows_batch_files(ytgrabber_dir, batch_dir):
     for cmd in commands:
         batch_content = f"""@echo off
 cd /d "{ytgrabber_dir}"
-powershell -ExecutionPolicy Bypass -File "run.ps1" %*"""
+powershell -ExecutionPolicy Bypass -File "quickstart.ps1" %*"""
         
         with open(os.path.join(batch_dir, f"{cmd}.bat"), "w") as f:
             f.write(batch_content)
@@ -50,7 +50,7 @@ def create_unix_shell_scripts(ytgrabber_dir, scripts_dir):
     for cmd in commands:
         script_content = f"""#!/bin/bash
 cd "{ytgrabber_dir}"
-python3 run.py "$@"
+./quickstart.sh "$@"
 """
         script_path = os.path.join(scripts_dir, cmd)
         with open(script_path, "w") as f:
