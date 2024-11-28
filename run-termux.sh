@@ -31,18 +31,30 @@ fi
 source venv/bin/activate
 
 printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-echo "Installing Necessary Packages..."
-printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-echo ""
 
-python -m pip install --upgrade pip
-pip install -r requirements.txt -q
+needs_install=false
+while IFS= read -r req || [ -n "$req" ]; do
+    [[ $req =~ ^[[:space:]]*# ]] || [[ -z $req ]] && continue
+    
+    package=$(echo "$req" | sed -E 's/([a-zA-Z0-9_-]+)(==|>=|<=|~=|!=|<|>).*/\1/')
+    
+    if ! python -c "import pkg_resources; exit(0 if '$package' in {pkg.key for pkg in pkg_resources.working_set} else 1)" 2>/dev/null; then
+        needs_install=true
+        break
+    fi
+done < requirements.txt
 
-echo ""
-printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-echo "Necessary Packages Installed"
-printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-echo ""
+if [ "$needs_install" = true ]; then
+    echo "Installing Necessary Packages..."
+    printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+    echo ""
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt -q
+else
+    echo "Necessary packages already installed."
+    printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+    echo ""
+fi
 
 printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 echo "App is Initializing..."

@@ -17,16 +17,31 @@ if (-not (Get-Command ffmpeg -ErrorAction SilentlyContinue)) {
 }
 
 Write-Host ("-" * 100)
-Write-Host "Installing Necessary Packages..."
-Write-Host ("-" * 100)
-Write-Host ""
-python.exe -m pip install --upgrade pip
-pip install -r requirements.txt -q
-Write-Host ""
-Write-Host ("-" * 100)
-Write-Host "Necessary Packages Installed"
-Write-Host ("-" * 100)
-Write-Host ""
+# Check if all required packages are installed
+$needsInstall = $false
+$requirements = Get-Content "requirements.txt"
+foreach ($req in $requirements) {
+    if ($req -match '^\s*#' -or $req -match '^\s*$') { continue }  # Skip comments and empty lines
+    $package = ($req -split '==|>=|<=|~=|!=|<|>')[0].Trim()
+    $checkPackage = python -c "import pkg_resources; print('$package' in {pkg.key for pkg in pkg_resources.working_set})" 2>$null
+    if ($checkPackage -eq "False") {
+        $needsInstall = $true
+        break
+    }
+}
+
+if ($needsInstall) {
+    Write-Host "Installing Necessary Packages..."
+    Write-Host ("-" * 100)
+    Write-Host ""
+    python.exe -m pip install --upgrade pip
+    pip install -r requirements.txt -q
+} else {
+    Write-Host "Necessary packages are already installed."
+    Write-Host ("-" * 100)
+    Write-Host ""
+}
+
 Write-Host ("-" * 100)
 Write-Host "App is Initializing..."
 Write-Host ("-" * 100)
