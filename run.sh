@@ -29,7 +29,7 @@ source venv/bin/activate
 
 printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 
-# Check if all required packages are installed
+# Check if all required packages installed
 needs_install=false
 while IFS= read -r req || [ -n "$req" ]; do
     [[ $req =~ ^[[:space:]]*# ]] || [[ -z $req ]] && continue

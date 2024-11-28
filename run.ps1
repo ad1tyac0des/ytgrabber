@@ -17,7 +17,7 @@ if (-not (Get-Command ffmpeg -ErrorAction SilentlyContinue)) {
 }
 
 Write-Host ("-" * 100)
-# Check if all required packages are installed
+# Check if all required packages installed
 $needsInstall = $false
 $requirements = Get-Content "requirements.txt"
 foreach ($req in $requirements) {
@@ -37,7 +37,7 @@ if ($needsInstall) {
     python.exe -m pip install --upgrade pip
     pip install -r requirements.txt -q
 } else {
-    Write-Host "Necessary packages are already installed."
+    Write-Host "Necessary packages already installed."
     Write-Host ("-" * 100)
     Write-Host ""
 }
