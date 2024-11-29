@@ -51,16 +51,16 @@ cd ytgrabber
 python install_command.py
 ```
 
-<div style="background-color: hsla(120, 100%, 90%, 0.05);padding: 10px; border-radius: 6px; border: 1px solid #84c697; margin: 10px 0;">
+<details>
+<summary>💡 Note for Windows Users</summary>
 
-💡 **Note for Windows Users:**
 - The script will request admin access once
 - It only adds YTGrabber commands to your system PATH
 - No other modifications are made to your system
 - Your privacy and security are our top priority
 - Being open-source, all code changes are transparent and verifiable
 
-</div>
+</details>
 
 ##### *Linux/MacOS*:
 ```bash
