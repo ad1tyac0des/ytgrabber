@@ -73,6 +73,10 @@ python3 install_command.py
 
 For Android Installtion instructions, check out our [Android Installation Guide](./docs/android-installation.md) 📲
 
+## 🔄 Uninstallation
+
+Need to uninstall? Check out our [Uninstallation Guide](./docs/uninstallation.md) for detailed instructions.
+
 ## 🚀 General Usage
 
 1. Run the application using `ytgrabber` or `ytgrab` command in terminal
