@@ -24,7 +24,6 @@ class YouTubeDownloader:
                 self.download_path = os.path.abspath(custom_path)
             print(f"Download folder set to: {self.download_path}")
         
-        # Create download directory if it doesn't exist
         if not os.path.exists(self.download_path):
             try:
                 os.makedirs(self.download_path)
@@ -35,7 +34,6 @@ class YouTubeDownloader:
                 self.download_path = self.DEFAULT_DOWNLOAD_PATH
                 os.makedirs(self.download_path, exist_ok=True)
 
-    # Prompt user for video URL and validate input
     def get_video_url(self):
         while True:
             url = input("Enter Video URL: ").strip()
@@ -43,7 +41,6 @@ class YouTubeDownloader:
                 return url
             print("URL cannot be empty. Please try again.")
 
-    # Extract video information and available formats using yt-dlp
     def fetch_video_info(self, url):
         try:
             ydl_opts = {
@@ -56,7 +53,7 @@ class YouTubeDownloader:
                 
                 title = info_dict.get('title', 'Unknown Title')
                 formats = []
-                resolution_formats = {}  # Dictionary to store best format for each resolution
+                resolution_formats = {}
                 
                 for f in info_dict.get('formats', []):
                     try:
@@ -71,7 +68,6 @@ class YouTubeDownloader:
                         file_ext = f.get('ext', 'Unknown')
                         fps = f.get('fps', 'Unknown')
                         
-                        # Keep only the format with largest filesize for each resolution
                         if resolution not in resolution_formats or filesize > resolution_formats[resolution]['filesize_raw']:
                             resolution_formats[resolution] = {
                                 'format_id': f.get('format_id'),
@@ -79,13 +75,12 @@ class YouTubeDownloader:
                                 'ext': file_ext,
                                 'fps': fps,
                                 'filesize': self.format_filesize(filesize),
-                                'filesize_raw': filesize  # Store raw filesize for comparison
+                                'filesize_raw': filesize
                             }
                     
                     except Exception as format_error:
                         print(f"Skipping problematic format: {format_error}")
                 
-                # Convert dictionary values to list, excluding the raw filesize
                 formats = [{k: v for k, v in fmt.items() if k != 'filesize_raw'} 
                           for fmt in resolution_formats.values()]
                 
@@ -100,7 +95,6 @@ class YouTubeDownloader:
             traceback.print_exc()
             return None
 
-    # Convert bytes to human-readable file size (B, KB, MB, GB, TB)
     def format_filesize(self, size):
         try:
             size = float(size)
@@ -114,7 +108,6 @@ class YouTubeDownloader:
         except (TypeError, ValueError):
             return "Unknown"
 
-    # Let user choose between Best Quality or Manual Selection mode
     def select_download_mode(self):
         questions = [
             inquirer.List('mode',
@@ -124,7 +117,6 @@ class YouTubeDownloader:
         ]
         return inquirer.prompt(questions)['mode']
 
-    # Find the highest quality format based on resolution and file size
     def get_best_format(self, formats):
         sorted_formats = sorted(
             formats,
@@ -136,13 +128,11 @@ class YouTubeDownloader:
         )
         return sorted_formats[0] if sorted_formats else None
 
-    # Display available formats and let user select one
     def select_download_format(self, formats):
         if not formats:
             print("No downloadable formats found!")
             return None
 
-        # Sort formats by resolution (highest to lowest) and filesize
         sorted_formats = sorted(
             formats,
             key=lambda x: (
@@ -169,7 +159,6 @@ class YouTubeDownloader:
         selected_index = format_choices.index(answers['format'])
         return sorted_formats[selected_index]  # Return from sorted formats
 
-    # Let user choose between video or audio-only download
     def select_download_type(self):
         questions = [
             inquirer.List('type',
@@ -181,7 +170,6 @@ class YouTubeDownloader:
         answers = inquirer.prompt(questions)
         return answers['type']
 
-    # Let user select MP3 audio quality (bitrate)
     def select_audio_quality(self):
         questions = [
             inquirer.List('quality',
@@ -196,12 +184,11 @@ class YouTubeDownloader:
             ),
         ]
         answer = inquirer.prompt(questions)['quality']
-        return answer.split('(')[1].split('k')[0].strip()  # Extract kbps value
+        return answer.split('(')[1].split('k')[0].strip() 
 
     def parse_timestamp(self, time_str):
         """Convert various time formats to seconds"""
         try:
-            # Remove any whitespace
             time_str = time_str.strip()
             
             # Try HH:MM:SS format
@@ -245,10 +232,8 @@ class YouTubeDownloader:
                 
             return start_seconds, end_seconds
 
-    # Download the video/audio with selected format and options
     def download_video(self, url, selected_format, download_type, audio_quality=None, clip_times=None):
         try:
-            # Handle both Audio (MP3) and Audio Clip (MP3)
             if download_type in ['Audio (MP3)', 'Audio Clip (MP3)']:
                 if clip_times and download_type == 'Audio Clip (MP3)':
                     start_time, end_time = clip_times
@@ -266,7 +251,6 @@ class YouTubeDownloader:
                     'outtmpl': os.path.join(self.download_path, filename_template),
                 }
 
-                # Add clip options if it's an audio clip
                 if clip_times and download_type == 'Audio Clip (MP3)':
                     start_time, end_time = clip_times
                     ydl_opts.update({
@@ -277,7 +261,6 @@ class YouTubeDownloader:
                         'force_keyframes_at_cuts': True,
                     })
             else:
-                # Existing video download code remains the same
                 resolution = selected_format["resolution"]
                 ext = selected_format["ext"]
                 fps = selected_format["fps"]
@@ -314,7 +297,6 @@ class YouTubeDownloader:
             import traceback
             traceback.print_exc()
 
-    # Main execution flow coordinating all download steps
     def run(self):
         try:
             url = self.get_video_url()
@@ -330,7 +312,6 @@ class YouTubeDownloader:
 
             download_type = self.select_download_type()
             
-            # Handle both Audio (MP3) and Audio Clip (MP3)
             if download_type in ['Audio (MP3)', 'Audio Clip (MP3)']:
                 audio_quality = self.select_audio_quality()
                 clip_times = None
