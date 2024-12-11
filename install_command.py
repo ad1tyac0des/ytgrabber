@@ -46,8 +46,10 @@ powershell -ExecutionPolicy Bypass -File "quickstart.ps1" %*"""
             f.write(batch_content)
 
 def create_unix_shell_scripts(ytgrabber_dir, scripts_dir):
-    commands = ["ytgrabber", "ytgrab"]
-    for cmd in commands:
+    cmds = ["ytgrabber", "ytgrab"]
+    os.makedirs(scripts_dir, exist_ok=True)
+
+    for cmd in cmds:
         script_content = f"""#!/bin/bash
 cd "{ytgrabber_dir}"
 ./quickstart.sh "$@"
@@ -58,6 +60,10 @@ cd "{ytgrabber_dir}"
         # Make the script executable
         st = os.stat(script_path)
         os.chmod(script_path, st.st_mode | stat.S_IEXEC)
+    quickstart_path = os.path.join(ytgrabber_dir, "quickstart.sh")
+    if os.path.exists(quickstart_path):
+        st = os.stat(quickstart_path)
+        os.chmod(quickstart_path, st.st_mode | stat.S_IEXEC)
 
 def add_to_windows_path(directory):
     import winreg
